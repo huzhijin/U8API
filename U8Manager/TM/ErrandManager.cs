@@ -40,7 +40,8 @@ namespace U8Manager.TM
                 bodyList[q].cDepCode = info.depCode;
                 bodyList[q].cDepName = info.depName;
                 errand.head.cDepName= info.depName;
-                errand.head.cDepCode = info.depCode;                
+                errand.head.cDepCode = info.depCode;
+                bodyList[q].cCreator = errand.head.cCreateBy;
                 //bodyList[q].pk_hr_tm_Errand = Guid.NewGuid().ToString();
                 bodyList[q].cVoucherId = ccode;
                 bodyList[q].cExamineApproveType = "2";

@@ -46,6 +46,8 @@ namespace U8Manager.TM
                 string person = bodyList[q].cPsn_Num;
                 HRPersonInfo info = voucherService.getPersonInfo(person, ref errMsg);
                 overtime.head.cDept_num = info.depCode;
+                bodyList[q].cCreator = overtime.head.cCreator;
+                bodyList[q].cCreatorNum = overtime.head.cCreatorNum;
                 bodyList[q].JobNumber = info.jobNum;
                 bodyList[q].VoucherID = ccode;
                 bodyList[q].uRecordId= Guid.NewGuid().ToString();

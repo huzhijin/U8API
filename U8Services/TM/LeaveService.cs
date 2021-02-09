@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Helper.DB;
@@ -71,8 +72,8 @@ namespace U8Services.TM
         {
             try
             {
-                string sql = " insert into hr_tm_LeaveMain (cAuditBy,cCode,cCreateBy,cCurrentAuditor,cDepCode,cDepName,cLeaveType,cModifyBy,cStatus,cSubmitBy,cSysBarCode,cVoucherCode,cVoucherId,dAuditOn,dBeginDate, dCreateOn,dEndDate,dModifyOn,dSubmitOn,PK_hr_tm_LeaveMain,rLeaveTimeType,vLeaveReason,vRemark)";
-                sql += "values('','TM110','" + head.cMaker + "','','" + head.cDepCode + "','" + head.cDepName + "','" + head.cLeaveType + "','','0','','" + barcode + "','" + head.cVoucherCode + "','" + head.cVoucherCode + "',null,'" + head.dBeginDate + "',getdate(), '" + head.dEndDate + "',null,null,'" + head.pk_hr_tm_LeaveMain + "','" + head.rLeaveTimeType + "','" + head.vLeaveReason + "','" + head.vRemark + "')";
+                string sql = " insert into hr_tm_LeaveMain (cExamineApproveType,cAuditBy,cCode,cCreateBy,cCurrentAuditor,cDepCode,cDepName,cLeaveType,cModifyBy,cStatus,cSubmitBy,cSysBarCode,cVoucherCode,cVoucherId,dAuditOn,dBeginDate, dCreateOn,dEndDate,dModifyOn,dSubmitOn,PK_hr_tm_LeaveMain,rLeaveTimeType,vLeaveReason,vRemark)";
+                sql += "values('2','','TM110','" + head.cMaker + "','','" + head.cDepCode + "','" + head.cDepName + "','" + head.cLeaveType + "','','0','','" + barcode + "','" + head.cVoucherCode + "','" + head.cVoucherCode + "',null,'" + head.dBeginDate + "',getdate(), '" + head.dEndDate + "',null,null,'" + head.pk_hr_tm_LeaveMain + "','" + head.rLeaveTimeType + "','" + head.vLeaveReason + "','" + head.vRemark + "')";
                 return db.ExecuteSql(sql); ;
             }
             catch (Exception ex)
@@ -86,10 +87,10 @@ namespace U8Services.TM
         {
             try
             {
-                string cSysBarCode = "|" + (row + 1).ToString();
+                string cSysBarCode = barcode+ "|" + (row + 1).ToString();
                 string year = DateTime.Today.ToString("yyyy");
-                string sql = " insert into hr_tm_Leave (cDepCode,cDepName,cDutyClass,cLeaveType,cPsn_Num,cSysBarCode,cVoucherId,dBeginDate,dEndDate,nDeductedTime,dPlanEndDate,irowno, IsDeducted,nActualLeaveHours,nActualLeaveTime,PK_hr_tm_Leave,rLeaveStatus,rLeaveTimeType,vLeaveReason,vLeaveUnit,vRemark,vRestPeriod,vTerminateReason) ";
-                sql += "values ('" + info.depCode + "','" + info.depName + "','" + info.dutyClass + "','" + head.cLeaveType + "','" + body.cPersonCode + "','" + cSysBarCode + "','" + head.cVoucherCode + "','" + body.dBeginDate + "','" + body.dEndDate + "','0','" + body.dEndDate + "', " + row + ",0," + leaveHours + "," + body.nActualLeaveTime + ",'" + body.pk_hr_tm_Leave + "','0','" + head.cLeaveType + "','" + body.vLeaveReason + "', " + body.vLeaveUnit + ",'" + body.vRemark + "','" + year + "','')";
+                string sql = " insert into hr_tm_Leave (cExamineApproveType,cDepCode,cDepName,cDutyClass,cLeaveType,cPsn_Num,cSysBarCode,cVoucherId,dBeginDate,dEndDate,nDeductedTime,dPlanEndDate,irowno, IsDeducted,nActualLeaveHours,nActualLeaveTime,PK_hr_tm_Leave,rLeaveStatus,rLeaveTimeType,vLeaveReason,vLeaveUnit,vRemark,vRestPeriod,vTerminateReason) ";
+                sql += "values ('2','" + info.depCode + "','" + info.depName + "','" + info.dutyClass + "','" + head.cLeaveType + "','" + body.cPersonCode + "','" + cSysBarCode + "','" + head.cVoucherCode + "','" + body.dBeginDate + "','" + body.dEndDate + "','0','" + body.dEndDate + "', " + row + ",0," + leaveHours + "," + body.nActualLeaveTime + ",'" + body.pk_hr_tm_Leave + "','0','" + head.rLeaveTimeType + "','" + body.vLeaveReason + "', " + body.vLeaveUnit + ",'" + body.vRemark + "','" + year + "','')";
                 return db.ExecuteSql(sql);
             }
             catch (Exception ex)
@@ -117,7 +118,7 @@ namespace U8Services.TM
         {
             try
             {
-                string sql = "update hr_tm_Leave set cAuditor = '" + head.cAuditBy + "',dAuditTime = convert(nvarchar(19), GETDATE(), 120)  where cVoucherId = '" + ccode + "' ";
+                string sql = "update hr_tm_Leave set  bAuditFlag='1',cAuditor = '" + head.cAuditBy + "',dAuditTime = convert(nvarchar(19), GETDATE(), 120)  where cVoucherId = '" + ccode + "' ";
                 return db.ExecuteSql(sql);
             }
             catch (Exception ex)
@@ -145,7 +146,7 @@ namespace U8Services.TM
         {
             try
             {
-                string sql = "update hr_tm_Leave set cAuditor = '" + username + "', cAuditorNum = '" + userId + "', dAuditTime = convert(nvarchar(19), GETDATE(), 120)  where cVoucherId = '" + ccode + "' ";
+                string sql = "update hr_tm_Leave set bAuditFlag='1',cAuditor = '" + username + "', cAuditorNum = '" + userId + "', dAuditTime = convert(nvarchar(19), GETDATE(), 120)  where cVoucherId = '" + ccode + "' ";
                 return db.ExecuteSql(sql);
             }
             catch (Exception ex)
@@ -155,6 +156,33 @@ namespace U8Services.TM
             }
            
         }
+        public List<LeaveType> getLeaveType(string cleaveType) 
+        {
+            List<LeaveType> leaveTypeList = new List<LeaveType>();
+            string sql = "SELECT * FROM hr_tm_LeaveType WHERE cCode='"+ cleaveType + "'";
+            DataSet ds = db.Query(sql);
+            if (ds != null)
+            {
 
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    LeaveType leaveType = new LeaveType();
+                    PropertyInfo[] propertys = leaveType.GetType().GetProperties();
+                    int i = 0;
+                    foreach (PropertyInfo prop in propertys)
+                    {
+                        string filename = ds.Tables[0].Columns[i].ColumnName;
+                        if (prop.Name.ToLower().Equals(filename.ToLower()))
+                        {
+                            var x = dr[filename] == null ? "" : dr[filename].ToString();
+                            prop.SetValue(leaveType, x, null);
+                        }
+                        i++;
+                    }
+                    leaveTypeList.Add(leaveType);
+                }
+            }
+                    return leaveTypeList;
+        }
     }
 }

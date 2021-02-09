@@ -63,11 +63,11 @@ namespace U8Model.TM
         /// <summary>
         /// 开始时间
         /// </summary>
-        public DateTime dBeginDate { set; get; }
+        public string dBeginDate { set; get; }
         /// <summary>
         /// 结束时间
         /// </summary>
-        public DateTime dEndDate { set; get; }
+        public string dEndDate { set; get; }
         /// <summary>
         /// 审核人
         /// </summary>
@@ -91,11 +91,11 @@ namespace U8Model.TM
         /// <summary>
         /// 开始时间
         /// </summary>
-        public DateTime dBeginDate { set; get; }
+        public string dBeginDate { set; get; }
         /// <summary>
         /// 结束时间
         /// </summary>
-        public DateTime dEndDate { set; get; }
+        public string dEndDate { set; get; }
         /// <summary>
         /// 请假原因
         /// </summary>

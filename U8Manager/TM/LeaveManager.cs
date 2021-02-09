@@ -35,8 +35,8 @@ namespace U8Manager.TM
                 head.vRemark = lstBody[0].vRemark;
             }
             head.pk_hr_tm_LeaveMain= Guid.NewGuid().ToString();
-            head.dBeginDate = lstBody[0].dBeginDate;
-            head.dEndDate = lstBody[0].dEndDate;
+            head.dBeginDate = Convert.ToDateTime(lstBody[0].dBeginDate).ToString("yyyy-MM-dd HH:mm:dd");
+            head.dEndDate = Convert.ToDateTime(lstBody[0].dEndDate).ToString("yyyy-MM-dd HH:mm:dd");
             int headdata = service.InsertHead(head, barcode, ref errMsg);
             if (headdata > 0)
             {
@@ -45,8 +45,8 @@ namespace U8Manager.TM
                 row = row + q;
                 for (int i = 0; i < lstBody.Count; i++)
                 {
-                    TimeSpan ts1 = new TimeSpan(lstBody[i].dBeginDate.Ticks);
-                    TimeSpan ts2 = new TimeSpan(lstBody[i].dEndDate.Ticks);
+                    TimeSpan ts1 = new TimeSpan(Convert.ToDateTime(lstBody[i].dBeginDate).Ticks);
+                    TimeSpan ts2 = new TimeSpan(Convert.ToDateTime(lstBody[i].dEndDate).Ticks);
                     TimeSpan ts = ts1.Subtract(ts2).Duration();
                     int day = ts.Days;
                     int hours = ts.Hours;
@@ -95,7 +95,11 @@ namespace U8Manager.TM
 
             return i;
         }
-
+        private decimal getLeaveTime(string beginTime, string endTime,string cleaveType) 
+        {
+            decimal leaveTime = decimal.Zero;
+            return leaveTime;
+        }
 
     }
     }

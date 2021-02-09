@@ -53,6 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TM\ErrandVoucher.cs" />
     <Compile Include="TM\HRPersonInfo.cs" />
+    <Compile Include="TM\LeaveType.cs" />
     <Compile Include="TM\LeaveVoucher.cs" />
     <Compile Include="TM\OverTimeVoucher.cs" />
   </ItemGroup>
