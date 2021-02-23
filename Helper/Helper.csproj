@@ -167,6 +167,7 @@
     <Compile Include="DB\SqlHelper.cs" />
     <Compile Include="JWT\JWTHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Time\TimeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

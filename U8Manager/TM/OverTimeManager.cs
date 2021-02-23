@@ -38,8 +38,8 @@ namespace U8Manager.TM
             overtime.head.dCreatTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:dd");
             overtime.head.vReason = bodyList[0].vReason;
             overtime.head.vRemark = bodyList[0].vRemark;
-            overtime.head.iBeginCardAhead = 60;
-            overtime.head.iEndCardForward = 60;
+            overtime.head.iBeginCardAhead = 150;
+            overtime.head.iEndCardForward = 150;
             overtime.head.nManHours = (Convert.ToDateTime(bodyList[0].dEndTime) - Convert.ToDateTime(bodyList[0].dBeginTime)).Hours.ToString();
             for (int q = 0; q < bodyList.Count; q++)
             {
@@ -57,8 +57,8 @@ namespace U8Manager.TM
                 bodyList[q].nOvertimeHours = (Convert.ToDateTime(bodyList[q].dEndTime) - Convert.ToDateTime(bodyList[q].dBeginTime)).Hours.ToString();
                 bodyList[q].nManHours = (Convert.ToDateTime(bodyList[q].dEndTime) - Convert.ToDateTime(bodyList[q].dBeginTime)).Hours.ToString();
                 bodyList[q].nSubOVTime = "0";
-                bodyList[q].dBeginTime = Convert.ToDateTime(bodyList[q].dBeginTime).AddMinutes(-60).TimeOfDay.ToString(); 
-                bodyList[q].dEndTime = Convert.ToDateTime(bodyList[q].dEndTime).AddMinutes(60).TimeOfDay.ToString();              
+                bodyList[q].dBeginTime = Convert.ToDateTime(bodyList[q].dBeginTime).AddMinutes(-150).TimeOfDay.ToString(); 
+                bodyList[q].dEndTime = Convert.ToDateTime(bodyList[q].dEndTime).AddMinutes(150).TimeOfDay.ToString();              
                 bodyList[q].dCreatTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:dd");               
                 bodyList[q].uOverTimeCode= Guid.NewGuid().ToString();
                 bodyList[q].cExamineApproveType = 2;

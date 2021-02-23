@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Helper.Time;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,18 +46,24 @@ namespace U8Manager.TM
                 row = row + q;
                 for (int i = 0; i < lstBody.Count; i++)
                 {
-                    TimeSpan ts1 = new TimeSpan(Convert.ToDateTime(lstBody[i].dBeginDate).Ticks);
-                    TimeSpan ts2 = new TimeSpan(Convert.ToDateTime(lstBody[i].dEndDate).Ticks);
-                    TimeSpan ts = ts1.Subtract(ts2).Duration();
-                    int day = ts.Days;
-                    int hours = ts.Hours;
-                    if (day >=0 ) 
+                    //TimeSpan ts1 = new TimeSpan(Convert.ToDateTime(lstBody[i].dBeginDate).Ticks);
+                    //TimeSpan ts2 = new TimeSpan(Convert.ToDateTime(lstBody[i].dEndDate).Ticks);
+                    //TimeSpan ts = ts1.Subtract(ts2).Duration();
+                    //int day = ts.Days;
+                    //int hours = ts.Hours;
+                    decimal hours = getLeaveHours(lstBody[i].dBeginDate, lstBody[i].dEndDate);
+                    if (hours <= 8)
                     {
-                        if (hours >= 8) { hours = 8; }
-                        lstBody[i].LeaveHours = day*8 + hours;
+                        lstBody[i].LeaveHours = hours;
                         lstBody[i].vLeaveUnit = 1;
-                        lstBody[i].nActualLeaveTime= day * 8 + hours;
-                    }                   
+                        lstBody[i].nActualLeaveTime = hours;
+                    }
+                    else 
+                    {
+                        lstBody[i].LeaveHours = hours;
+                        lstBody[i].vLeaveUnit = 2;
+                        lstBody[i].nActualLeaveTime = Math.Floor(hours / 8);
+                    }
                     //decimal hours = service.getLeaveHours(lstBody[i].dBeginDate, lstBody[i].dEndDate,
                     //    lstBody[i].cPersonCode);
                     decimal hoursForLeave = lstBody[i].LeaveHours;
@@ -72,6 +79,16 @@ namespace U8Manager.TM
             }
 
             return row;
+        }
+        private decimal getLeaveHours(string starTime, string endTime)
+        {
+            TimeSpan ts3 = new TimeSpan(8, 0, 0);
+            TimeSpan ts4 = new TimeSpan(12, 0, 0);
+            TimeSpan ts5 = new TimeSpan(12, 30, 0);
+            TimeSpan ts6 = new TimeSpan(16, 30, 0);
+            TimeSpan time = TimeHelper.GetDateTimeSpan(Convert.ToDateTime(starTime), Convert.ToDateTime(endTime), ts3, ts4, ts5, ts6);
+            decimal hours = Convert.ToDecimal(time.TotalHours);
+            return hours;
         }
         public int auditLeave(string ccode, LeaveVoucherHead head, ref string errMsg)
         {
