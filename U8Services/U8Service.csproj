@@ -44,7 +44,9 @@
     <Compile Include="Common\VoucherService.cs" />
     <Compile Include="GL\AccVouchService.cs" />
     <Compile Include="HM\TransferRegisterService.cs" />
+    <Compile Include="Common\ReceiveLogService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PU\PurchaseOrderService.cs" />
     <Compile Include="TM\ErrandService.cs" />
     <Compile Include="TM\LeaveService.cs" />
     <Compile Include="TM\OverTimeService.cs" />
@@ -62,6 +64,11 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AP\" />
+    <Folder Include="AR\" />
+    <Folder Include="SA\" />
+    <Folder Include="ST\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

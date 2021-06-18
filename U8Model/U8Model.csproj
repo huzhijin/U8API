@@ -50,13 +50,23 @@
     <Compile Include="GL\Voucher.cs" />
     <Compile Include="HM\TransferPersonInfo.cs" />
     <Compile Include="HM\TransferRegister.cs" />
+    <Compile Include="Common\ReceiveLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PU\ArrivalGoods.cs" />
+    <Compile Include="PU\PurchaseOrder.cs" />
+    <Compile Include="PU\PurchaseRequisition.cs" />
     <Compile Include="TM\ErrandVoucher.cs" />
     <Compile Include="TM\HRPersonInfo.cs" />
     <Compile Include="TM\LeaveType.cs" />
     <Compile Include="TM\LeaveVoucher.cs" />
     <Compile Include="TM\OverTimeVoucher.cs" />
+    <Compile Include="TM\PersonDayResult.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AP\" />
+    <Folder Include="AR\" />
+    <Folder Include="SA\" />
+    <Folder Include="ST\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

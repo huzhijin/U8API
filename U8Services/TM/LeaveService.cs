@@ -184,5 +184,60 @@ namespace U8Services.TM
             }
                     return leaveTypeList;
         }
+
+        public List<PersonDayResult> getPersonDayResult(List<LeaveVoucherBody> bodys) 
+        {
+            List<PersonDayResult> personDayResults = new List<PersonDayResult>();
+            //string[] codeStr = new string[bodys.Count];
+            //int i = 0;
+            //foreach (LeaveVoucherBody v in bodys)
+            //{
+            //    codeStr[i] = v.cPersonCode;
+            //    i++;
+            //}
+            //需过滤的单据
+            //string sqlIn = string.Join("','", codeStr);
+            foreach (LeaveVoucherBody b in bodys) 
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("SELECT  a.nWorkHours,a.cPsn_Num ,a.cDutyClass ,a.cpsn_name ,a.dDutyDate ,a.cDutyCode ,a.rDutyType ,d.vName ,a.rDateProperty ,a.cDepCode ,b.vDutyName ,");
+                sb.Append(" ISNULL(a.bAuditFlag, 0) AS bAuditFlag ,ISNULL(a.bDutyBasic, 0) AS bDutyBasic ,ISNULL(a.vSaveDutyBasic, '') AS vSaveDutyBasic ,");
+                sb.Append(" ISNULL(a.DB_ManHours, 0) AS DB_ManHours ,ISNULL(bJoinDuty, 0) AS bJoinDuty ,( CASE c.bChangeDept WHEN '1' THEN c.cTempDept  ELSE '' END ) AS TempDept ,");
+                sb.Append(" e.cDepName AS TempDeptName ,( CASE c.bChangeDutyClass WHEN '1' THEN c.cTempDutyClass ELSE '' END ) AS TempDutyClass , f.vName AS TempDutyClassName   ");
+                sb.Append("FROM    hr_tm_DayResult AS a WITH ( NOLOCK )");
+                sb.Append("  LEFT JOIN hr_tm_DutyBasic AS b ON a.cDutyCode = b.cDutyCode");
+                sb.Append("  LEFT JOIN HR_TM_TempDeptAndDutyClass AS c ON a.cPsn_Num = c.cPsn_Num AND a.dDutyDate = c.dDutyDate");
+                sb.Append("  LEFT JOIN hr_tm_DutyType AS d ON a.rDutyType = d.cCode");
+                sb.Append("  LEFT JOIN Department AS e ON e.cDepCode = c.cTempDept");
+                sb.Append("  LEFT JOIN hr_tm_DutyClass AS f ON f.cCode = c.cTempDutyClass");
+                sb.Append("  a.cPsn_Num = ( '" + b.cPersonCode + "' )  AND DATEDIFF(d, a.dDutyDate, '"+b.dBeginDate+"') <= 0     AND DATEDIFF(d, a.dDutyDate, '"+b.dEndDate+ "') >= 0  AND a.cDutyCode <> 'PH'");
+                DataSet ds =  db.Query(sb.ToString());
+                if (ds != null)
+                {
+                    if (ds.Tables[0].Rows.Count != 0)
+                    {
+                        PersonDayResult pr = new PersonDayResult();
+                        DataRow dr = ds.Tables[0].Rows[0];
+                        pr.cPsn_Num = dr["cPsn_Num"].ToString();                       
+                        pr.cDutyCode = dr["cDutyCode"].ToString();
+                        pr.dDutyDate= Convert.ToDateTime(dr["dDutyDate"]).ToString("yyyy-MM-dd");
+                        pr.nWorkHours = Convert.ToDecimal(dr["nWorkHours"]);                        
+                        personDayResults.Add(pr);
+
+                    }
+                }
+
+            }
+            return personDayResults;
+        }
+
+        private int getDutyWorkMintue(string cDutyCode, DateTime dDutyDate) 
+        {
+            string sql = "SELECT   TOP(1) nWorkMinute FROM HR_TM_DutyPeriodResult WHERE YEAR(dDutyTime)='"+ dDutyDate .Year+ "' AND MONTH(dDutyTime)='"+ dDutyDate .Month+ "' AND cDutyCode='"+cDutyCode+"'";
+            int mintue = db.GetSingle(sql)==null? 0 : Convert.ToInt32(db.GetSingle(sql));
+            return mintue;
+                
+;        }
+
     }
 }

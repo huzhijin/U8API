@@ -38,6 +38,7 @@ namespace U8Manager.TM
             head.pk_hr_tm_LeaveMain= Guid.NewGuid().ToString();
             head.dBeginDate = Convert.ToDateTime(lstBody[0].dBeginDate).ToString("yyyy-MM-dd HH:mm:dd");
             head.dEndDate = Convert.ToDateTime(lstBody[0].dEndDate).ToString("yyyy-MM-dd HH:mm:dd");
+            List<PersonDayResult> personDayResults = service.getPersonDayResult(lstBody);
             int headdata = service.InsertHead(head, barcode, ref errMsg);
             if (headdata > 0)
             {
@@ -51,19 +52,34 @@ namespace U8Manager.TM
                     //TimeSpan ts = ts1.Subtract(ts2).Duration();
                     //int day = ts.Days;
                     //int hours = ts.Hours;
-                    decimal hours = getLeaveHours(lstBody[i].dBeginDate, lstBody[i].dEndDate);
-                    if (hours <= 8)
+                    //获取当前人员排班
+                    List<PersonDayResult> curPersonDay = personDayResults.Where(num =>num.cPsn_Num== lstBody[i].cPersonCode).ToList();
+                    int day = curPersonDay.Count;
+                    if (day > 1) 
                     {
-                        lstBody[i].LeaveHours = hours;
-                        lstBody[i].vLeaveUnit = 1;
-                        lstBody[i].nActualLeaveTime = hours;
                     }
                     else 
                     {
-                        lstBody[i].LeaveHours = hours;
-                        lstBody[i].vLeaveUnit = 2;
-                        lstBody[i].nActualLeaveTime = Math.Floor(hours / 8);
+                        TimeSpan ts1 = new TimeSpan(Convert.ToDateTime(lstBody[i].dBeginDate).Ticks);
+                        TimeSpan ts2 = new TimeSpan(Convert.ToDateTime(lstBody[i].dEndDate).Ticks);
+                        TimeSpan ts = ts1.Subtract(ts2).Duration();
+                        int hours = ts.Hours;
+                        //decimal hours = getLeaveHours(lstBody[i].dBeginDate, lstBody[i].dEndDate);
+                        if (hours <= 4)
+                        {
+                            lstBody[i].LeaveHours = 4;
+                            lstBody[i].vLeaveUnit = 2;
+                            lstBody[i].nActualLeaveTime = 0.5M;
+                        }
+                        if (hours > 4 && hours < 8)
+                        {
+                            lstBody[i].LeaveHours = hours;
+                            lstBody[i].vLeaveUnit = 1;
+                            lstBody[i].nActualLeaveTime = hours;
+                        }
+                       
                     }
+                   
                     //decimal hours = service.getLeaveHours(lstBody[i].dBeginDate, lstBody[i].dEndDate,
                     //    lstBody[i].cPersonCode);
                     decimal hoursForLeave = lstBody[i].LeaveHours;

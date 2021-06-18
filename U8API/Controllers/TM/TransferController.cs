@@ -32,6 +32,15 @@ namespace U8API.Controllers.TM
         {
             string errMsg = "";
             ReturnMessage msg = new ReturnMessage();
+            try
+            {
+            ReceiveLog receive = new ReceiveLog();
+            receive.uuid = Guid.NewGuid();
+            receive.receiveData = json;
+            receive.interfaceCode = "Transfer";
+            receive.interfaceDesc = "人事调动单新增";
+            receive.op = "add";
+           
             vouMag = (VoucherManager)HttpContext.Current.Application.Get(token);
             if (vouMag == null)
             {
@@ -41,7 +50,9 @@ namespace U8API.Controllers.TM
             }
             else
             {
-                TransferManager transferManager = new TransferManager(vouMag.UFDataConnstringForNet);
+                    ReceiveLogManager logManager = new ReceiveLogManager(vouMag.UFDataConnstringForNet);
+                    logManager.AddReceiveLog(receive, ref errMsg);
+                    TransferManager transferManager = new TransferManager(vouMag.UFDataConnstringForNet);
                 TransferRegister transfer = (TransferRegister)JsonConvert.DeserializeObject(json, typeof(TransferRegister));
                 int i = transferManager.AddTransfer(transfer, ref errMsg);
                 if (i >= 1)
@@ -73,13 +84,21 @@ namespace U8API.Controllers.TM
                     msg.Code = 500;
                     msg.Msg = "新增失败" + errMsg;
                 }
+                    receive = logManager.getReturnDesc(receive, msg);
+                    logManager.UpdateReceiveLog(receive, ref errMsg);
+                }
+                HttpContext.Current.Application.Remove(vouMag.GetGUID);
+                string str = msg.ToJson();
+                return new HttpResponseMessage { Content = new StringContent(str, Encoding.GetEncoding("UTF-8"), "application/json") };
             }
-
-
-            HttpContext.Current.Application.Remove(vouMag.GetGUID);
-            string str = msg.ToJson();
-            return new HttpResponseMessage { Content = new StringContent(str, Encoding.GetEncoding("UTF-8"), "application/json") };
-
+            catch (Exception ex)
+            {
+                msg.Success = false;
+                msg.Code = 500;
+                msg.Msg = ex.Message.ToString();
+                string str = msg.ToJson();
+                return new HttpResponseMessage { Content = new StringContent(str, Encoding.GetEncoding("UTF-8"), "application/json") };
+            }
 
         }
         /// <summary>

@@ -104,6 +104,9 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Account\AccountController.cs" />
     <Compile Include="Controllers\GL\AccVoucherController.cs" />
+    <Compile Include="Controllers\GL\testco.cs" />
+    <Compile Include="Controllers\GL\testcovouch.cs" />
+    <Compile Include="Controllers\PU\PurchaseOrderController.cs" />
     <Compile Include="Controllers\TM\ErrandController.cs" />
     <Compile Include="Controllers\TM\LeaveController.cs" />
     <Compile Include="Controllers\TM\OverTimeController.cs" />
@@ -122,7 +125,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controllers\AP\" />
+    <Folder Include="Controllers\AR\" />
+    <Folder Include="Controllers\SA\" />
+    <Folder Include="Controllers\ST\" />
+  </ItemGroup>
   <ItemGroup>
     <COMReference Include="ADODB">
       <Guid>{00000206-0000-0010-8000-00AA006D2EA4}</Guid>
